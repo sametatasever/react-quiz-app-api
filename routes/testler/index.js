@@ -11,16 +11,20 @@ const { isLoggedIn } = require("../oturum/middlewares");
 const { quizSchema } = require("../../schemas");
 
 router.get("/", async (req, res, next) => {
-  const { q } = req.query;
+  try {
+    const { q } = req.query;
 
-  if (q) {
-    const quizzes = await Quiz.find({
-      description: { $regex: q, $options: "i" },
-    });
+    if (q) {
+      const quizzes = await Quiz.find({
+        description: { $regex: q, $options: "i" },
+      });
+      res.json(quizzes);
+    }
+    const quizzes = await Quiz.find({});
     res.json(quizzes);
+  } catch (err) {
+    next(err);
   }
-  const quizzes = await Quiz.find({});
-  res.json(quizzes);
 });
 
 router.post("/", isLoggedIn, async (req, res, next) => {
