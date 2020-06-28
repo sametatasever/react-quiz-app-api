@@ -13,7 +13,11 @@ const Question = new Schema({
 });
 
 const quizSchema = new Schema({
-  author: { type: String, required: "Oluşturan Gereklidir" },
+  author: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "User",
+    required: "Oluşturan Gereklidir",
+  },
   description: { type: String, required: "Mail Gereklidir" },
   questions: [Question],
   createdAt: { type: String, required: "Oluşturma Tarihi Gereklidir" },

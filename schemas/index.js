@@ -26,24 +26,19 @@ const loginSchema = Joi.object({
 });
 
 const quizSchema = Joi.object({
-  author: Joi.string()
-    .trim()
-    .regex(/^([a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+\s)*[a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+$/)
-    .min(3)
-    .max(30)
-    .trim()
-    .required(),
   description: Joi.string().trim().required(),
   questions: Joi.array()
     .items(
       Joi.object({
         description: Joi.string().trim().required(),
-        answers: Joi.array().items(
-          Joi.object({
-            index: Joi.number().required(),
-            description: Joi.string().trim().required(),
-          })
-        ),
+        answers: Joi.array()
+          .items(
+            Joi.object({
+              index: Joi.number().required(),
+              description: Joi.string().trim().required(),
+            })
+          )
+          .unique("index"),
         answerIndex: Joi.number().required(),
       })
     )

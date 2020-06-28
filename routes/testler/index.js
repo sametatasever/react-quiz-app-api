@@ -19,8 +19,9 @@ router.get("/", async (req, res, next) => {
         description: { $regex: q, $options: "i" },
       });
       res.json(quizzes);
+      return;
     }
-    const quizzes = await Quiz.find({});
+    const quizzes = await Quiz.find({}).populate("author", "name");
     res.json(quizzes);
   } catch (err) {
     next(err);
@@ -32,11 +33,13 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     const validQuiz = await quizSchema.validateAsync(req.body);
 
     const newQuiz = new Quiz(req.body);
+    newQuiz.author = req.user._id;
     newQuiz.createdAt = moment().format("Do MMMM YYYY, h:mm:ss a");
-    //burda kaldık
+
     await newQuiz.save();
-    res.json({
-      newQuiz,
+
+    res.status(201).json({
+      success: true,
     });
   } catch (err) {
     next(err);
